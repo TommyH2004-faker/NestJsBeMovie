@@ -19,7 +19,7 @@ const User_1 = require("../../entity/User");
 const typeorm_2 = require("typeorm");
 const bcrypt = require("bcrypt");
 const role_entity_1 = require("../../entity/role.entity");
-const mailer_service_1 = require("@src/shared/mailer.service");
+const mailer_service_1 = require("../../shared/mailer.service");
 const crypto_1 = require("crypto");
 let UsersService = class UsersService {
     userRepository;

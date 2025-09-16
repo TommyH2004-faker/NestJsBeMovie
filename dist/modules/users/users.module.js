@@ -13,7 +13,7 @@ const users_controller_1 = require("./users.controller");
 const typeorm_1 = require("@nestjs/typeorm");
 const User_1 = require("../../entity/User");
 const role_entity_1 = require("../../entity/role.entity");
-const mailer_module_1 = require("@src/shared/mailer.module");
+const mailer_module_1 = require("../../shared/mailer.module");
 let UsersModule = class UsersModule {
 };
 exports.UsersModule = UsersModule;

@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReviewsController = void 0;
 const common_1 = require("@nestjs/common");
 const reviews_service_1 = require("./reviews.service");
-const jwt_auth_guard_1 = require("@src/guards/jwt-auth.guard");
+const jwt_auth_guard_1 = require("../../guards/jwt-auth.guard");
 const create_dto_1 = require("./create_dto");
 let ReviewsController = class ReviewsController {
     reviewsService;

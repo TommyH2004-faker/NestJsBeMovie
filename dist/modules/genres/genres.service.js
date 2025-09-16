@@ -15,9 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GenresService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const genre_entity_1 = require("@src/entity/genre.entity");
+const genre_entity_1 = require("../../entity/genre.entity");
 const Repository_1 = require("typeorm/repository/Repository");
-const movie_entity_1 = require("@src/entity/movie.entity");
+const movie_entity_1 = require("../../entity/movie.entity");
 let GenresService = class GenresService {
     genresRepository;
     moviesRepository;

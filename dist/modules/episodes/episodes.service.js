@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EpisodesService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const episode_entity_1 = require("@src/entity/episode.entity");
+const episode_entity_1 = require("../../entity/episode.entity");
 const Repository_1 = require("typeorm/repository/Repository");
 let EpisodesService = class EpisodesService {
     episodeRepository;

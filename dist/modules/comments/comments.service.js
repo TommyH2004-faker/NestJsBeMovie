@@ -15,9 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommentsService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const comment_entity_1 = require("@src/entity/comment.entity");
-const movie_entity_1 = require("@src/entity/movie.entity");
-const User_1 = require("@src/entity/User");
+const comment_entity_1 = require("../../entity/comment.entity");
+const movie_entity_1 = require("../../entity/movie.entity");
+const User_1 = require("../../entity/User");
 const Repository_1 = require("typeorm/repository/Repository");
 let CommentsService = class CommentsService {
     commentsRepository;

@@ -1,5 +1,5 @@
 import { UsersService } from './users.service';
-import { User } from '@src/entity/User';
+import { User } from '../../entity/User';
 import { UpdateUserDto } from './dto/UpdateDto';
 export declare class UsersController {
     private readonly usersService;

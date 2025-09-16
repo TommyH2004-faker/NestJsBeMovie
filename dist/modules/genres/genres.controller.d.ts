@@ -1,6 +1,6 @@
 import { GenresService } from './genres.service';
-import { Genre } from '@src/entity/genre.entity';
-import { Movie } from '@src/entity/movie.entity';
+import { Genre } from '../../entity/genre.entity';
+import { Movie } from '../../entity/movie.entity';
 import { MoviesService } from '../movies/movies.service';
 export declare class GenresController {
     private readonly genresService;

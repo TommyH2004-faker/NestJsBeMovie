@@ -17,8 +17,8 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const movie_entity_1 = require("../../entity/movie.entity");
-const review_entity_1 = require("@src/entity/review.entity");
-const comment_entity_1 = require("@src/entity/comment.entity");
+const review_entity_1 = require("../../entity/review.entity");
+const comment_entity_1 = require("../../entity/comment.entity");
 const genre_entity_1 = require("../../entity/genre.entity");
 let MoviesService = class MoviesService {
     moviesRepository;

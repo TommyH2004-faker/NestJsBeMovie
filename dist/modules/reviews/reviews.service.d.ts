@@ -1,4 +1,4 @@
-import { Review } from '@src/entity/review.entity';
+import { Review } from '../../entity/review.entity';
 import { Repository } from 'typeorm/repository/Repository';
 import { CreateReviewDto } from './create_dto';
 export declare class ReviewsService {

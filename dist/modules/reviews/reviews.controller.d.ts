@@ -1,5 +1,5 @@
 import { ReviewsService } from './reviews.service';
-import { Review } from '@src/entity/review.entity';
+import { Review } from '../../entity/review.entity';
 import { CreateReviewDto } from './create_dto';
 export declare class ReviewsController {
     private readonly reviewsService;

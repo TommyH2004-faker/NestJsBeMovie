@@ -1,5 +1,5 @@
 import { CommentsService } from './comments.service';
-import { Comment } from '@src/entity/comment.entity';
+import { Comment } from '../../entity/comment.entity';
 export declare class CommentsController {
     private readonly commentsService;
     constructor(commentsService: CommentsService);

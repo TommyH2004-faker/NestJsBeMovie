@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReviewsService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const review_entity_1 = require("@src/entity/review.entity");
+const review_entity_1 = require("../../entity/review.entity");
 const Repository_1 = require("typeorm/repository/Repository");
 let ReviewsService = class ReviewsService {
     reviewsRepository;

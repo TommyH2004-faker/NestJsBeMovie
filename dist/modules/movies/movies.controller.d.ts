@@ -1,6 +1,6 @@
 import { MoviesService } from './movies.service';
-import { Movie } from '@src/entity/movie.entity';
-import { Review } from '@src/entity/review.entity';
+import { Movie } from '../../entity/movie.entity';
+import { Review } from '../../entity/review.entity';
 export declare class MoviesController {
     private readonly moviesService;
     constructor(moviesService: MoviesService);

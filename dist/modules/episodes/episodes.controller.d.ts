@@ -1,5 +1,5 @@
 import { EpisodesService } from './episodes.service';
-import { Episode } from '@src/entity/episode.entity';
+import { Episode } from '../../entity/episode.entity';
 export declare class EpisodesController {
     private readonly episodesService;
     constructor(episodesService: EpisodesService);

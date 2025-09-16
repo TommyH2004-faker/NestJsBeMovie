@@ -1,7 +1,7 @@
 import { Repository } from 'typeorm';
 import { Movie } from '../../entity/movie.entity';
-import { Review } from '@src/entity/review.entity';
-import { Comment } from '@src/entity/comment.entity';
+import { Review } from '../../entity/review.entity';
+import { Comment } from '../../entity/comment.entity';
 import { Genre } from '../../entity/genre.entity';
 export declare class MoviesService {
     private moviesRepository;

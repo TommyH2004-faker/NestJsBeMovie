@@ -11,9 +11,9 @@ const common_1 = require("@nestjs/common");
 const comments_service_1 = require("./comments.service");
 const comments_controller_1 = require("./comments.controller");
 const typeorm_1 = require("@nestjs/typeorm");
-const comment_entity_1 = require("@src/entity/comment.entity");
-const User_1 = require("@src/entity/User");
-const movie_entity_1 = require("@src/entity/movie.entity");
+const comment_entity_1 = require("../../entity/comment.entity");
+const User_1 = require("../../entity/User");
+const movie_entity_1 = require("../../entity/movie.entity");
 const movies_module_1 = require("../movies/movies.module");
 let CommentsModule = class CommentsModule {
 };

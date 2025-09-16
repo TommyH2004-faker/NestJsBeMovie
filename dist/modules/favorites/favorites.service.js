@@ -15,9 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FavoritesService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const favorite_entity_1 = require("@src/entity/favorite.entity");
-const movie_entity_1 = require("@src/entity/movie.entity");
-const User_1 = require("@src/entity/User");
+const favorite_entity_1 = require("../../entity/favorite.entity");
+const movie_entity_1 = require("../../entity/movie.entity");
+const User_1 = require("../../entity/User");
 const typeorm_2 = require("typeorm");
 let FavoritesService = class FavoritesService {
     favoritesRepository;

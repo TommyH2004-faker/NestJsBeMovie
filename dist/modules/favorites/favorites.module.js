@@ -11,9 +11,9 @@ const common_1 = require("@nestjs/common");
 const favorites_service_1 = require("./favorites.service");
 const favorites_controller_1 = require("./favorites.controller");
 const typeorm_1 = require("@nestjs/typeorm");
-const favorite_entity_1 = require("@src/entity/favorite.entity");
-const movie_entity_1 = require("@src/entity/movie.entity");
-const User_1 = require("@src/entity/User");
+const favorite_entity_1 = require("../../entity/favorite.entity");
+const movie_entity_1 = require("../../entity/movie.entity");
+const User_1 = require("../../entity/User");
 let FavoritesModule = class FavoritesModule {
 };
 exports.FavoritesModule = FavoritesModule;

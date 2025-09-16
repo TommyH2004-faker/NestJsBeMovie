@@ -1,4 +1,4 @@
-import { Episode } from '@src/entity/episode.entity';
+import { Episode } from '../../entity/episode.entity';
 import { Repository } from 'typeorm/repository/Repository';
 export declare class EpisodesService {
     private readonly episodeRepository;

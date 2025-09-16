@@ -11,7 +11,7 @@ const common_1 = require("@nestjs/common");
 const episodes_service_1 = require("./episodes.service");
 const episodes_controller_1 = require("./episodes.controller");
 const typeorm_module_1 = require("@nestjs/typeorm/dist/typeorm.module");
-const episode_entity_1 = require("@src/entity/episode.entity");
+const episode_entity_1 = require("../../entity/episode.entity");
 let EpisodesModule = class EpisodesModule {
 };
 exports.EpisodesModule = EpisodesModule;

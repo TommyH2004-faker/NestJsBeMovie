@@ -1,5 +1,5 @@
 import { FavoritesService } from './favorites.service';
-import { Favorite } from '@src/entity/favorite.entity';
+import { Favorite } from '../../entity/favorite.entity';
 export declare class FavoritesController {
     private readonly favoritesService;
     constructor(favoritesService: FavoritesService);

@@ -8,7 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MailerModule = void 0;
 const common_1 = require("@nestjs/common");
-const mailer_service_1 = require("./mailer.service");
+const mailer_service_1 = require("../shared/mailer.service");
 let MailerModule = class MailerModule {
 };
 exports.MailerModule = MailerModule;
