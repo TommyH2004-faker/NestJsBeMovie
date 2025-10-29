@@ -195,9 +195,19 @@ export class UsersService {
 
 
   async updateInfoUser(id: number, userData: UpdateUserDto) {
-    await this.userRepository.update(id, userData);
-    return this.userRepository.findOneBy({ id });
-  }
+  const user = await this.userRepository.findOneBy({ id });
+  if (!user) return null;
+
+  await this.userRepository.update(id, userData); 
+  return this.userRepository.findOneBy({ id });
+}
+async findOneWithReviews(id: number) {
+  return this.userRepository.findOne({
+    where: { id },
+    relations: ['reviews'],
+  });
+}
+
 
   async deleteUser(id: number): Promise<User | null> {
     const user = await this.userRepository.findOne({ where: { id } });
@@ -206,6 +216,16 @@ export class UsersService {
     await this.userRepository.delete(id);
     return user;
   }
+
+ // Nếu dùng TypeORM
+// Nếu dùng TypeORM
+async update(id: number, data: Partial<User>) {
+  await this.userRepository.update(id, data);
+  return this.userRepository.findOne({ where: { id } });
+}
+
+
+
 }
 
 

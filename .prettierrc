@@ -1,4 +1,5 @@
 {
   "singleQuote": true,
-  "parser": "flow"
+  "parser": "flow",
+    "trailingComma": "all"
 }

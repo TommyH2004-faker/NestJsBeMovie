@@ -6,6 +6,7 @@ const common_1 = require("@nestjs/common");
 const http_exception_filter_1 = require("./exceptions/http-exception.filter");
 const logger_middleware_1 = require("./middleware/logger/logger.middleware");
 const winston_logger_1 = require("./logger/winston.logger");
+const cookieParser = require("cookie-parser");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule, {
         logger: winston_logger_1.winstonLogger,
@@ -13,7 +14,11 @@ async function bootstrap() {
     app.useGlobalPipes(new common_1.ValidationPipe({ whitelist: true }));
     app.use(new logger_middleware_1.LoggerMiddleware().use);
     app.useGlobalFilters(new http_exception_filter_1.HttpExceptionFilter());
-    app.enableCors();
+    app.use(cookieParser());
+    app.enableCors({
+        origin: 'http://localhost:8080',
+        credentials: true,
+    });
     app.useGlobalPipes(new common_1.ValidationPipe({
         transform: true,
         whitelist: true,

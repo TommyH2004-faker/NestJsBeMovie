@@ -134,7 +134,7 @@ let MoviesController = class MoviesController {
     async deleteMovie(id) {
         await this.moviesService.findOne(id);
         await this.moviesService.remove(id);
-        return { message: 'Movie deleted successfully' };
+        return { message: 'Xoá phim thành công' };
     }
     async incrementViews(id) {
         return this.moviesService.incrementViews(id);
@@ -294,7 +294,7 @@ __decorate([
 ], MoviesController.prototype, "updateMovie", null);
 __decorate([
     (0, common_1.Delete)(':id'),
-    (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),

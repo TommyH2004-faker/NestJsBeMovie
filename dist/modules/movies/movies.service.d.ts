@@ -3,12 +3,14 @@ import { Movie } from '../../entity/movie.entity';
 import { Review } from '../../entity/review.entity';
 import { Comment } from '../../entity/comment.entity';
 import { Genre } from '../../entity/genre.entity';
+import { Favorite } from '@src/entity/favorite.entity';
 export declare class MoviesService {
     private moviesRepository;
+    private favoriteRepository;
     private reviewsRepository;
     private genreRepository;
     private commentsRepository;
-    constructor(moviesRepository: Repository<Movie>, reviewsRepository: Repository<Review>, genreRepository: Repository<Genre>, commentsRepository: Repository<Comment>);
+    constructor(moviesRepository: Repository<Movie>, favoriteRepository: Repository<Favorite>, reviewsRepository: Repository<Review>, genreRepository: Repository<Genre>, commentsRepository: Repository<Comment>);
     findAll(): Promise<Movie[]>;
     searchMoviesAdvanced(title?: string, genreId?: number, page?: number, size?: number, sort?: string): Promise<any>;
     getMoviesByGenre(genreId: number, page?: number, size?: number, sort?: string): Promise<any>;

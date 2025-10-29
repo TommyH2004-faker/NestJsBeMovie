@@ -15,141 +15,136 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
-const users_service_1 = require("../users/users.service");
 const local_auth_guard_1 = require("../../guards/local-auth.guard");
 const jwt_auth_guard_1 = require("../../guards/jwt-auth.guard");
+const users_service_1 = require("../users/users.service");
+const ACCESS_TOKEN_COOKIE = 'access_token';
+const REFRESH_TOKEN_COOKIE = 'refresh_token';
+function cookieOptions() {
+    const isProd = process.env.NODE_ENV === 'production';
+    return {
+        httpOnly: true,
+        secure: isProd,
+        sameSite: 'strict',
+    };
+}
 let AuthController = class AuthController {
     authService;
-    userservice;
-    constructor(authService, userservice) {
+    usersService;
+    constructor(authService, usersService) {
         this.authService = authService;
-        this.userservice = userservice;
+        this.usersService = usersService;
     }
-    register(userData) {
-        return this.userservice.create(userData);
-    }
-    login(req) {
+    async login(req, res) {
         const user = req.user;
-        return this.authService.login({
+        if (!user.enabled) {
+            throw new common_1.UnauthorizedException('Tài khoản của bạn đã bị khóa, vui lòng liên hệ quản trị viên.');
+        }
+        const { access_token, refresh_token } = await this.authService.login({
             id: user.id,
             username: user.username,
             email: user.email,
             enabled: user.enabled,
-            roles: Array.isArray(user.roles) ? [user.roles[0]] : [user.roles],
+            roles: Array.isArray(user.roles)
+                ? user.roles.map((r) => (typeof r === 'string' ? r : r.name))
+                : [],
         });
-    }
-    async refreshToken({ refresh_token }) {
-        if (!refresh_token) {
-            throw new common_1.BadRequestException('Refresh token is required');
-        }
-        const user = await this.authService.verityRefreshToken(refresh_token);
-        if (!user) {
-            throw new common_1.BadRequestException('Invalid refresh token');
-        }
-        return this.authService.login({
-            id: user.id,
-            username: user.name,
-            email: user.email,
-            enabled: user.enabled,
-            roles: user.roles ? user.roles.map(role => role.name) : [],
+        res.cookie(ACCESS_TOKEN_COOKIE, access_token, {
+            ...cookieOptions(),
+            maxAge: 1000 * 60 * 15,
         });
-    }
-    getProfile(req) {
+        res.cookie(REFRESH_TOKEN_COOKIE, refresh_token, {
+            ...cookieOptions(),
+            maxAge: 1000 * 60 * 60 * 24 * 7,
+        });
         return {
-            id: req.user?.id,
-            username: req.user?.username,
-            email: req.user?.email,
-            role: Array.isArray(req.user?.roles) ? req.user?.roles[0] : req.user?.roles,
+            message: 'Login success',
+            access_token,
+            refresh_token,
         };
     }
-    async existsByEmails(email) {
-        const exists = await this.userservice.existsByEmail(email);
-        return exists ? 'true' : 'false';
-    }
-    async existsByUsername(name) {
-        const exists = await this.userservice.existsByName(name);
-        return exists ? 'true' : 'false';
-    }
-    async activate(code, res) {
-        const user = await this.userservice.activateAccount(code);
-        if (!user) {
-            return res.status(400).json({
-                success: false,
-                message: '❌ Mã kích hoạt không hợp lệ hoặc đã hết hạn.'
-            });
-        }
-        return res.status(200).json({
-            success: true,
-            message: '✅ Kích hoạt tài khoản thành công! Giờ bạn có thể đăng nhập.'
+    async refreshToken(req, res) {
+        const refreshToken = req.cookies?.[REFRESH_TOKEN_COOKIE];
+        if (!refreshToken)
+            throw new common_1.BadRequestException('Refresh token missing');
+        const user = await this.authService.verifyRefreshToken(refreshToken);
+        if (!user)
+            throw new common_1.BadRequestException('Invalid refresh token');
+        const { access_token, refresh_token: newRefresh } = await this.authService.login({
+            id: user.id,
+            username: user.name ?? '',
+            email: user.email ?? '',
+            enabled: (user.enabled) ?? true,
+            roles: Array.isArray(user.roles)
+                ? user.roles.map((r) => (typeof r === 'string' ? r : r.name))
+                : [],
         });
+        res.cookie(ACCESS_TOKEN_COOKIE, access_token, {
+            ...cookieOptions(),
+            maxAge: 1000 * 60 * 15,
+        });
+        res.cookie(REFRESH_TOKEN_COOKIE, newRefresh, {
+            ...cookieOptions(),
+            maxAge: 1000 * 60 * 60 * 24 * 7,
+        });
+        return { message: 'Token refreshed' };
     }
-    async forgotPassword(email) {
-        const ok = await this.userservice.forgotPassword(email);
-        if (!ok)
-            throw new common_1.NotFoundException('Email không tồn tại');
-        return { success: true, message: 'Mật khẩu mới đã được gửi vào email của bạn' };
+    getProfile(req) {
+        const u = req.user;
+        return {
+            id: u.id,
+            username: u.name,
+            email: u.email,
+            enabled: u.enabled,
+            roles: u.roles ?? [],
+            avatar: u.avatar,
+        };
+    }
+    async logout(req, res) {
+        const user = req.user;
+        if (user?.id) {
+            const svc = this.authService;
+            await svc.revokeRefreshToken?.(user.id);
+        }
+        res.clearCookie(ACCESS_TOKEN_COOKIE, cookieOptions());
+        res.clearCookie(REFRESH_TOKEN_COOKIE, cookieOptions());
+        return { message: 'Logged out' };
     }
 };
 exports.AuthController = AuthController;
 __decorate([
-    (0, common_1.Post)('register'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "register", null);
-__decorate([
-    (0, common_1.Post)('login'),
     (0, common_1.UseGuards)(local_auth_guard_1.LocalAuthGuard),
+    (0, common_1.Post)('login'),
     __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 __decorate([
-    (0, common_1.Post)('/refresh-token'),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.Post)('refresh-token'),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "refreshToken", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Get)('/profile'),
+    (0, common_1.Get)('profile'),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "getProfile", null);
 __decorate([
-    (0, common_1.Get)('search/existsByEmail'),
-    __param(0, (0, common_1.Query)('email')),
+    (0, common_1.Post)('logout'),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
-], AuthController.prototype, "existsByEmails", null);
-__decorate([
-    (0, common_1.Get)('search/existsByUsername'),
-    __param(0, (0, common_1.Query)('name')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], AuthController.prototype, "existsByUsername", null);
-__decorate([
-    (0, common_1.Get)('/activate/:code'),
-    __param(0, (0, common_1.Param)('code')),
-    __param(1, (0, common_1.Res)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
-    __metadata("design:returntype", Promise)
-], AuthController.prototype, "activate", null);
-__decorate([
-    (0, common_1.Put)('forgot-password'),
-    __param(0, (0, common_1.Body)('email')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], AuthController.prototype, "forgotPassword", null);
+], AuthController.prototype, "logout", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService,

@@ -30,7 +30,7 @@ export class User {
   updatedAt: Date;
   @Column({ nullable: true })
   gender: string;
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   avatar: string;
   @Column({ nullable: true })
   activationCode: string;

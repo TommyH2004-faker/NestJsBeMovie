@@ -20,13 +20,16 @@ const movie_entity_1 = require("../../entity/movie.entity");
 const review_entity_1 = require("../../entity/review.entity");
 const comment_entity_1 = require("../../entity/comment.entity");
 const genre_entity_1 = require("../../entity/genre.entity");
+const favorite_entity_1 = require("../../entity/favorite.entity");
 let MoviesService = class MoviesService {
     moviesRepository;
+    favoriteRepository;
     reviewsRepository;
     genreRepository;
     commentsRepository;
-    constructor(moviesRepository, reviewsRepository, genreRepository, commentsRepository) {
+    constructor(moviesRepository, favoriteRepository, reviewsRepository, genreRepository, commentsRepository) {
         this.moviesRepository = moviesRepository;
+        this.favoriteRepository = favoriteRepository;
         this.reviewsRepository = reviewsRepository;
         this.genreRepository = genreRepository;
         this.commentsRepository = commentsRepository;
@@ -332,16 +335,16 @@ let MoviesService = class MoviesService {
     }
     async remove(id) {
         try {
+            await this.favoriteRepository.delete({ movie: { id } });
             const result = await this.moviesRepository.delete(id);
             if (result.affected === 0) {
                 throw new common_1.NotFoundException(`Movie with ID ${id} not found`);
             }
         }
         catch (error) {
-            if (error instanceof common_1.NotFoundException) {
+            if (error instanceof common_1.NotFoundException)
                 throw error;
-            }
-            throw new common_1.BadRequestException(`Error deleting movie: ${error.message}`);
+            throw new common_1.BadRequestException(`Error deleting movie: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
     }
     async incrementViews(id) {
@@ -492,10 +495,12 @@ __decorate([
 exports.MoviesService = MoviesService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(movie_entity_1.Movie)),
-    __param(1, (0, typeorm_1.InjectRepository)(review_entity_1.Review)),
-    __param(2, (0, typeorm_1.InjectRepository)(genre_entity_1.Genre)),
-    __param(3, (0, typeorm_1.InjectRepository)(comment_entity_1.Comment)),
+    __param(1, (0, typeorm_1.InjectRepository)(favorite_entity_1.Favorite)),
+    __param(2, (0, typeorm_1.InjectRepository)(review_entity_1.Review)),
+    __param(3, (0, typeorm_1.InjectRepository)(genre_entity_1.Genre)),
+    __param(4, (0, typeorm_1.InjectRepository)(comment_entity_1.Comment)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository])

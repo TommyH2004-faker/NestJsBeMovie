@@ -15,13 +15,14 @@ const movie_entity_1 = require("../../entity/movie.entity");
 const review_entity_1 = require("../../entity/review.entity");
 const comment_entity_1 = require("../../entity/comment.entity");
 const genre_entity_1 = require("../../entity/genre.entity");
+const favorite_entity_1 = require("../../entity/favorite.entity");
 let MoviesModule = class MoviesModule {
 };
 exports.MoviesModule = MoviesModule;
 exports.MoviesModule = MoviesModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            typeorm_1.TypeOrmModule.forFeature([movie_entity_1.Movie, review_entity_1.Review, comment_entity_1.Comment, genre_entity_1.Genre]),
+            typeorm_1.TypeOrmModule.forFeature([movie_entity_1.Movie, review_entity_1.Review, comment_entity_1.Comment, genre_entity_1.Genre, favorite_entity_1.Favorite]),
         ],
         controllers: [movies_controller_1.MoviesController],
         providers: [movies_service_1.MoviesService],

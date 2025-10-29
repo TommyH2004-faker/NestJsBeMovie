@@ -1,32 +1,27 @@
+import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
-import { Request, Response } from 'express';
 export declare class AuthController {
     private readonly authService;
-    private userservice;
-    constructor(authService: AuthService, userservice: UsersService);
-    register(userData: any): Promise<import("../../entity/User").User>;
-    login(req: Request): {
-        access_token: string;
-        refresh_token: string;
-    };
-    refreshToken({ refresh_token }: {
-        refresh_token: string;
-    }): Promise<{
+    private readonly usersService;
+    constructor(authService: AuthService, usersService: UsersService);
+    login(req: Request, res: Response): Promise<{
+        message: string;
         access_token: string;
         refresh_token: string;
     }>;
+    refreshToken(req: Request, res: Response): Promise<{
+        message: string;
+    }>;
     getProfile(req: Request): {
-        id: number | undefined;
-        username: string | undefined;
-        email: string | undefined;
-        role: string | undefined;
+        id: any;
+        username: any;
+        email: any;
+        enabled: any;
+        roles: any;
+        avatar: any;
     };
-    existsByEmails(email: string): Promise<string>;
-    existsByUsername(name: string): Promise<string>;
-    activate(code: string, res: Response): Promise<Response<any, Record<string, any>>>;
-    forgotPassword(email: string): Promise<{
-        success: boolean;
+    logout(req: Request, res: Response): Promise<{
         message: string;
     }>;
 }

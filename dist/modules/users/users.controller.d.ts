@@ -7,17 +7,21 @@ export declare class UsersController {
     getCountUsers(): Promise<number>;
     createUser(userData: Partial<User>): Promise<User>;
     getAllUsers(): Promise<User[]>;
-    getInfoUserById(id: number): Promise<User | null>;
     updatePassword(id: number, { oldPassword, newPassword }: {
         oldPassword: string;
         newPassword: string;
-    }): Promise<User | {
+    }): Promise<{
         message: string;
     }>;
+    getUserById(id: number): Promise<User | null>;
     updateUser1(id: number, userData: UpdateUserDto): Promise<User | {
         message: string;
     }>;
     deleteUser(id: number): Promise<User | {
+        message: string;
+    }>;
+    uploadAvatar(id: number, file: Express.Multer.File): Promise<{
+        avatar: string;
         message: string;
     }>;
 }

@@ -18,20 +18,35 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
     usersService;
     constructor(usersService) {
         const jwtSecret = process.env.JWT_SECRET;
-        if (!jwtSecret) {
+        if (!jwtSecret)
             throw new Error('JWT_SECRET environment variable is not set');
-        }
         super({
-            jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
+            jwtFromRequest: passport_jwt_1.ExtractJwt.fromExtractors([
+                (req) => {
+                    if (req?.cookies?.access_token) {
+                        return req.cookies.access_token;
+                    }
+                    return passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+                },
+            ]),
             ignoreExpiration: false,
             secretOrKey: jwtSecret,
         });
         this.usersService = usersService;
     }
     async validate(payload) {
-        const email = payload.email;
-        const user = await this.usersService.findByEmail(email);
-        return user;
+        const user = await this.usersService.findByEmail(payload.email);
+        if (!user)
+            throw new common_1.UnauthorizedException('User not found');
+        return {
+            id: user.id,
+            username: user.name,
+            email: user.email,
+            enabled: user.enabled,
+            roles: Array.isArray(user.roles)
+                ? user.roles.map((r) => (typeof r === 'string' ? r : r.name))
+                : [],
+        };
     }
 };
 exports.JwtStrategy = JwtStrategy;

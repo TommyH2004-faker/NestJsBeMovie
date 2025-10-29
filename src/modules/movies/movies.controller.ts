@@ -278,15 +278,22 @@ async getTopMovies() {
   }
 
   // DELETE /movies/:id - Xóa phim
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteMovie(@Param('id', ParseIntPipe) id: number) {
-    // Validate if movie exists
-    await this.moviesService.findOne(id);
+  // @Delete(':id')
+  // @HttpCode(HttpStatus.NO_CONTENT)
+  // async deleteMovie(@Param('id', ParseIntPipe) id: number) {
+  //   // Validate if movie exists
+  //   await this.moviesService.findOne(id);
 
-    await this.moviesService.remove(id);
-    return { message: 'Movie deleted successfully' };
-  }
+  //   await this.moviesService.remove(id);
+  //   return { message: 'Movie deleted successfully' };
+  // }
+@Delete(':id')
+@HttpCode(HttpStatus.OK)
+async deleteMovie(@Param('id', ParseIntPipe) id: number) {
+  await this.moviesService.findOne(id);
+  await this.moviesService.remove(id);
+  return { message: 'Xoá phim thành công' };
+}
 
 
   // POST /movies/:id/view - Tăng lượt xem

@@ -13,33 +13,53 @@ exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("../users/users.service");
 const jwt_1 = require("@nestjs/jwt");
+const bcrypt = require("bcrypt");
 let AuthService = class AuthService {
     userService;
-    jwtservice;
-    constructor(userService, jwtservice) {
+    jwtService;
+    constructor(userService, jwtService) {
         this.userService = userService;
-        this.jwtservice = jwtservice;
+        this.jwtService = jwtService;
     }
-    login(user) {
+    async login(user) {
         const payload = {
             sub: user.id,
-            username: user.username,
             email: user.email,
+            username: user.username,
             enabled: user.enabled,
-            role: Array.isArray(user.roles) && user.roles.length > 0 ? user.roles[0] : '',
+            roles: user.roles,
         };
-        const access_token = this.jwtservice.sign(payload);
-        const refresh_token = this.jwtservice.sign(payload, {
+        const access_token = this.jwtService.sign(payload, {
+            expiresIn: '15m',
+        });
+        const refresh_token = this.jwtService.sign(payload, {
             expiresIn: '7d',
         });
-        void this.userService.saveRefreshToken(refresh_token, user.id);
-        return {
-            access_token,
-            refresh_token,
-        };
+        const hashedRefresh = await bcrypt.hash(refresh_token, 10);
+        await this.userService.saveRefreshToken(hashedRefresh, user.id);
+        return { access_token, refresh_token };
     }
-    verityRefreshToken(refresh_token) {
-        return this.jwtservice.decode(refresh_token);
+    async verifyRefreshToken(refresh_token) {
+        try {
+            const decoded = this.jwtService.verify(refresh_token);
+            const userId = typeof decoded === 'object' && decoded !== null && 'sub' in decoded
+                ? decoded.sub
+                : null;
+            if (typeof userId !== 'number')
+                return null;
+            const user = await this.userService.findById(userId);
+            if (!user)
+                return null;
+            if (typeof user.refreshToken !== 'string')
+                return null;
+            const isValid = await bcrypt.compare(refresh_token, user.refreshToken);
+            if (!isValid)
+                return null;
+            return user;
+        }
+        catch {
+            return null;
+        }
     }
 };
 exports.AuthService = AuthService;

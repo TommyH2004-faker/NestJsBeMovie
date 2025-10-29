@@ -16,6 +16,9 @@ exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
 const UpdateDto_1 = require("./dto/UpdateDto");
+const bcrypt = require("bcrypt");
+const platform_express_1 = require("@nestjs/platform-express");
+const cloudinary_storage_1 = require("../Cloundinary/cloudinary-storage");
 let UsersController = class UsersController {
     usersService;
     constructor(usersService) {
@@ -30,19 +33,20 @@ let UsersController = class UsersController {
     async getAllUsers() {
         return await this.usersService.getAllUsers();
     }
-    async getInfoUserById(id) {
-        return await this.usersService.getInfoUserById(id);
-    }
     async updatePassword(id, { oldPassword, newPassword }) {
         const isMatch = await this.usersService.ConfirmPassword(id, oldPassword);
         if (!isMatch) {
             return { message: 'Old password is incorrect' };
         }
-        const updatedUser = await this.usersService.updateInfoUser(id, { password: newPassword });
+        const hashed = await bcrypt.hash(newPassword, 10);
+        const updatedUser = await this.usersService.updateInfoUser(id, { password: hashed });
         if (!updatedUser) {
             return { message: 'User not found' };
         }
-        return updatedUser;
+        return { message: 'Password updated successfully' };
+    }
+    async getUserById(id) {
+        return this.usersService.findOneWithReviews(id);
     }
     async updateUser1(id, userData) {
         const updatedUser = await this.usersService.updateInfoUser(id, userData);
@@ -57,6 +61,20 @@ let UsersController = class UsersController {
             return { message: 'User not found' };
         }
         return user;
+    }
+    async uploadAvatar(id, file) {
+        if (!file)
+            throw new common_1.BadRequestException('Không nhận được file');
+        const avatarUrl = file.path;
+        const updatedUser = await this.usersService.update(id, {
+            avatar: avatarUrl,
+        });
+        if (!updatedUser)
+            throw new common_1.BadRequestException('Không tìm thấy người dùng');
+        return {
+            avatar: updatedUser.avatar,
+            message: 'Cập nhật ảnh đại diện thành công',
+        };
     }
 };
 exports.UsersController = UsersController;
@@ -80,13 +98,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getAllUsers", null);
 __decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", Promise)
-], UsersController.prototype, "getInfoUserById", null);
-__decorate([
     (0, common_1.Put)(':id/password'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
@@ -94,6 +105,13 @@ __decorate([
     __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "updatePassword", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getUserById", null);
 __decorate([
     (0, common_1.Put)(":id"),
     __param(0, (0, common_1.Param)("id")),
@@ -109,6 +127,15 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "deleteUser", null);
+__decorate([
+    (0, common_1.Put)(':id/avatar'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file', { storage: cloudinary_storage_1.storage })),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "uploadAvatar", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [users_service_1.UsersService])

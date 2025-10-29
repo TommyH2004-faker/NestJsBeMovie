@@ -37,6 +37,8 @@ const role_module_1 = require("./modules/role/role.module");
 const role_entity_1 = require("./entity/role.entity");
 const mailer_1 = require("@nestjs-modules/mailer");
 const cloudinary_module_1 = require("./modules/Cloundinary/cloudinary.module");
+const win32_1 = require("path/win32");
+const serve_static_1 = require("@nestjs/serve-static");
 let AppModule = class AppModule {
     constructor() {
         console.log({
@@ -63,6 +65,10 @@ exports.AppModule = AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
+            }),
+            serve_static_1.ServeStaticModule.forRoot({
+                rootPath: (0, win32_1.join)(__dirname, '..', 'uploads'),
+                serveRoot: '/uploads',
             }),
             product_module_1.ProductModule,
             mailer_1.MailerModule.forRoot({

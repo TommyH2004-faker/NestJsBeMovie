@@ -5,11 +5,13 @@ import { Movie } from '../../entity/movie.entity';
 import { Review } from '../../entity/review.entity';
 import { Comment } from '../../entity/comment.entity';
 import { Genre } from '../../entity/genre.entity';
+import { Favorite } from '@src/entity/favorite.entity';
 @Injectable()
 export class MoviesService {
   constructor(
   // eslint-disable-next-line prettier/prettier
   @InjectRepository(Movie) private moviesRepository: Repository<Movie>,
+  @InjectRepository(Favorite) private favoriteRepository: Repository<Favorite>,
   @InjectRepository(Review) private reviewsRepository: Repository<Review>,
   @InjectRepository(Genre) private genreRepository: Repository<Genre>,
   @InjectRepository(Comment) private commentsRepository: Repository<Comment>, // index [2]
@@ -463,21 +465,37 @@ async getAllMovies(page: number, size: number, sort: string): Promise<any> {
   }
 
   // Xóa phim
-  async remove(id: number): Promise<void> {
-    try {
-      const result = await this.moviesRepository.delete(id);
+  // async remove(id: number): Promise<void> {
+  //   try {
+  //     const result = await this.moviesRepository.delete(id);
       
-      if (result.affected === 0) {
-        throw new NotFoundException(`Movie with ID ${id} not found`);
-      }
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      throw new BadRequestException(`Error deleting movie: ${error.message}`);
+  //     if (result.affected === 0) {
+  //       throw new NotFoundException(`Movie with ID ${id} not found`);
+  //     }
+  //   } catch (error) {
+  //     if (error instanceof NotFoundException) {
+  //       throw error;
+  //     }
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  //     throw new BadRequestException(`Error deleting movie: ${error.message}`);
+  //   }
+  // }
+async remove(id: number): Promise<void> {
+  try {
+    // Xóa các bản ghi favorite liên quan
+    await this.favoriteRepository.delete({ movie: { id } });
+
+    // Sau đó mới xóa movie
+    const result = await this.moviesRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Movie with ID ${id} not found`);
     }
+  } catch (error) {
+    if (error instanceof NotFoundException) throw error;
+    throw new BadRequestException(`Error deleting movie: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
+}
 
   // Tăng lượt xem
   async incrementViews(id: number): Promise<Movie> {

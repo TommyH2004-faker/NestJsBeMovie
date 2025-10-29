@@ -8,7 +8,7 @@ import {
 import { HttpExceptionFilter } from './exceptions/http-exception.filter';
 import { LoggerMiddleware } from './middleware/logger/logger.middleware';
 import { winstonLogger } from './logger/winston.logger';
-
+import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: winstonLogger,
@@ -18,8 +18,14 @@ async function bootstrap() {
   app.use(new LoggerMiddleware().use);
   app.useGlobalFilters(new HttpExceptionFilter());
   // app.useLogger(['log']);
-
-  app.enableCors();
+  // main.ts
+  // BẮT BUỘC: dùng cookie-parser
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  app.use(cookieParser());
+  app.enableCors({
+    origin: 'http://localhost:8080', // domain FE
+    credentials: true,
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

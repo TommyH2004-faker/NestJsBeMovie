@@ -121,8 +121,17 @@ let UsersService = class UsersService {
         return await bcrypt.compare(password, user.password);
     }
     async updateInfoUser(id, userData) {
+        const user = await this.userRepository.findOneBy({ id });
+        if (!user)
+            return null;
         await this.userRepository.update(id, userData);
         return this.userRepository.findOneBy({ id });
+    }
+    async findOneWithReviews(id) {
+        return this.userRepository.findOne({
+            where: { id },
+            relations: ['reviews'],
+        });
     }
     async deleteUser(id) {
         const user = await this.userRepository.findOne({ where: { id } });
@@ -130,6 +139,10 @@ let UsersService = class UsersService {
             return null;
         await this.userRepository.delete(id);
         return user;
+    }
+    async update(id, data) {
+        await this.userRepository.update(id, data);
+        return this.userRepository.findOne({ where: { id } });
     }
 };
 exports.UsersService = UsersService;

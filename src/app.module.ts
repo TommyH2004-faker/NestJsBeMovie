@@ -25,12 +25,18 @@ import { RoleModule } from './modules/role/role.module';
 import { Role } from './entity/role.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { CloudinaryModule } from './modules/Cloundinary/cloudinary.module';
+import { join } from 'path/win32';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-    }), // Load environment variables from .env file
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads',
+    }),
     ProductModule,
     MailerModule.forRoot({
       transport: {
