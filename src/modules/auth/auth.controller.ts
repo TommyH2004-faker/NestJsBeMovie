@@ -318,19 +318,58 @@ export class AuthController {
 //     refresh_token,
 //   };
 // }
+// @UseGuards(LocalAuthGuard)
+// @Post('login')
+// async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+//   // user đã được validate ở LocalStrategy (đã qua kiểm tra enabled + password)
+//   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+//   const user = req.user as any;
+
+//   // Nếu tới được đây, nghĩa là user hợp lệ
+//   const { access_token, refresh_token } = await this.authService.login({
+//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+//     id: user.id,
+//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+//     username: user.name,  // hoặc user.username nếu bạn đặt vậy trong entity
+//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+//     email: user.email,
+//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+//     enabled: user.enabled,
+//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+//     roles: Array.isArray(user.roles)
+//       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return
+//       ? user.roles.map((r: any) => (typeof r === 'string' ? r : r.name))
+//       : [],
+//   });
+
+//   // Set cookies
+//   res.cookie(ACCESS_TOKEN_COOKIE, access_token, {
+//     ...cookieOptions(),
+//     maxAge: 1000 * 60 * 15, // 15 phút
+//   });
+
+//   res.cookie(REFRESH_TOKEN_COOKIE, refresh_token, {
+//     ...cookieOptions(),
+//     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 ngày
+//   });
+
+//   return {
+//     message: 'Login success',
+//     access_token,
+//     refresh_token,
+//   };
+// }
 @UseGuards(LocalAuthGuard)
 @Post('login')
 async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-  // user đã được validate ở LocalStrategy (đã qua kiểm tra enabled + password)
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const user = req.user as any;
 
-  // Nếu tới được đây, nghĩa là user hợp lệ
   const { access_token, refresh_token } = await this.authService.login({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     id: user.id,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    username: user.name,  // hoặc user.username nếu bạn đặt vậy trong entity
+    username: user.name,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     email: user.email,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
@@ -342,21 +381,28 @@ async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
       : [],
   });
 
-  // Set cookies
+  // ✅ Thiết lập cookie option chuẩn cho môi trường deploy
+  const cookieConfig = {
+    httpOnly: true,
+    secure: true,        // bắt buộc trên HTTPS (Render)
+    sameSite: 'none' as const,    // cho phép cookie cross-site (Vercel ↔ Render)
+    path: '/',
+  };
+
+  // ✅ Set cookie Access token (15 phút)
   res.cookie(ACCESS_TOKEN_COOKIE, access_token, {
-    ...cookieOptions(),
-    maxAge: 1000 * 60 * 15, // 15 phút
+    ...cookieConfig,
+    maxAge: 1000 * 60 * 15,
   });
 
+  // ✅ Set cookie Refresh token (7 ngày)
   res.cookie(REFRESH_TOKEN_COOKIE, refresh_token, {
-    ...cookieOptions(),
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 ngày
+    ...cookieConfig,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
   });
 
   return {
     message: 'Login success',
-    access_token,
-    refresh_token,
   };
 }
 
