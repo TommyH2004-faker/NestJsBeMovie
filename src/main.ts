@@ -23,7 +23,10 @@ async function bootstrap() {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   app.use(cookieParser());
   app.enableCors({
-    origin: 'http://localhost:8080', // domain FE
+    origin: [
+      'http://localhost:8080', // local
+      'https://reactmovie-nine.vercel.app', // ✅ FE thật trên Vercel
+    ],
     credentials: true,
   });
   app.useGlobalPipes(
