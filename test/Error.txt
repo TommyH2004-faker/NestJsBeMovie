@@ -1,0 +1,60 @@
+Đã sửa
+"scripts": {
+  "build": "nest build"
+}
+thành
+"scripts": {
+  "build": "tsc -p tsconfig.build.json"
+}
+
+và DB_TYPE=mysql
+   DB_HOST=localhost
+   DB_HOST=db
+   DB_PORT=3306
+   DB_NAME=nestjs_db
+   DB_USER=spring_04
+   DB_PASSWORD=spring04
+
+DB_TYPE=mysql
+DB_HOST=gondola.proxy.rlwy.net
+DB_PORT=56799
+DB_NAME=railway
+DB_USER=nestjs02
+DB_PASSWORD=nesjs_02
+  "build": "tsc -p tsconfig.build.json",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+
+    thanh "scripts": {
+            "start": "node dist/main.js",
+            "start:dev": "nest start --watch",
+            "build": "tsc -p tsconfig.build.json"
+          }
+
+  "start": "node -r tsconfig-paths/register dist/main.js",
+    "build": "tsc -p tsconfig.build.json",
+
+    và theem
+    Trong tsconfig.json:
+
+    "compilerOptions": {
+      "baseUrl": "./",
+      "paths": {
+        "src/*": ["./src/*"]
+      }
+    }
+
+
+    Và trong tsconfig.build.json, thêm dòng:
+
+    "compilerOptions": {
+      "baseUrl": "./",
+      "paths": {
+        "src/*": ["./src/*"]
+      }
+    }
+
+
+    Sau đó cài thêm package:
+
+    npm install --save tsconfig-paths
