@@ -26,6 +26,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:8080', // local
       'https://reactmovie-nine.vercel.app', // ✅ FE thật trên Vercel
+      'https://reactmovie-proxy.hiept81331.workers.dev',
     ],
     credentials: true,
   });
