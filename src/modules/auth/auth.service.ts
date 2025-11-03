@@ -37,7 +37,7 @@
 //     email: user.email,
      
 //     enabled: user.enabled,
-//     role: Array.isArray(user.roles) && user.roles.length > 0 ? user.roles[0] : '', // ✅ Chỉ lấy tên role đầu tiên
+//     role: Array.isArray(user.roles) && user.roles.length > 0 ? user.roles[0] : '', //  Chỉ lấy tên role đầu tiên
 //   };
 //   const access_token = this.jwtservice.sign(payload);
 //   const refresh_token = this.jwtservice.sign(payload, {
@@ -68,7 +68,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  // ✅ Tạo token & lưu refresh token mã hoá
+  //  Tạo token & lưu refresh token mã hoá
   async login(user: {
     id: number;
     username: string;
@@ -81,7 +81,7 @@ export class AuthService {
     email: user.email,
     username: user.username,
     enabled: user.enabled,
-    roles: user.roles, // ✅ thêm roles vào payload
+    roles: user.roles, //  thêm roles vào payload
   };
 
     const access_token = this.jwtService.sign(payload, {
@@ -92,7 +92,7 @@ export class AuthService {
       expiresIn: '7d',
     });
 
-    // ✅ Lưu refresh token đã mã hoá để kiểm tra khi user refresh
+    //  Lưu refresh token đã mã hoá để kiểm tra khi user refresh
     const hashedRefresh = await bcrypt.hash(refresh_token, 10);
     await this.userService.saveRefreshToken(hashedRefresh, user.id);
 

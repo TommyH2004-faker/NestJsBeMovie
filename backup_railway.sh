@@ -1,4 +1,4 @@
-#!/bin/bash
+
 
 # Thư mục lưu backup
 mkdir -p ./backups

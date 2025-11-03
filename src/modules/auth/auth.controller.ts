@@ -90,7 +90,7 @@
 //   username: user.name,
 //   email: user.email,
 //   enabled: user.enabled,
-//   roles: user.roles ? user.roles.map(role => role.name) : [], // ✅ Chuyển đổi roles sang mảng tên role
+//   roles: user.roles ? user.roles.map(role => role.name) : [], //  Chuyển đổi roles sang mảng tên role
 // });
 //   }
 
@@ -127,7 +127,7 @@
 // //     username: req.user?.username,
 // //     email: req.user?.email,
 // //     roles: req.user?.roles,
-// //     message: 'Profile retrieved successfully', // ✅ Trả về mảng roles
+// //     message: 'Profile retrieved successfully', //  Trả về mảng roles
 // //   };
 // // }
 //   @Get('search/existsByEmail')
@@ -153,11 +153,11 @@
 
 // //     if (!user) {
        
-// //       return res.status(400).send('❌ Mã kích hoạt không hợp lệ hoặc đã hết hạn.');
+// //       return res.status(400).send(' Mã kích hoạt không hợp lệ hoặc đã hết hạn.');
 // //     }
 
      
-// //     return res.send('✅ Kích hoạt tài khoản thành công! Giờ bạn có thể đăng nhập.');
+// //     return res.send(' Kích hoạt tài khoản thành công! Giờ bạn có thể đăng nhập.');
 // //   }
 // @Get('/activate/:code')
 // async activate(@Param('code') code: string, @Res() res: Response) {
@@ -166,13 +166,13 @@
 //   if (!user) {
 //     return res.status(400).json({
 //       success: false,
-//       message: '❌ Mã kích hoạt không hợp lệ hoặc đã hết hạn.'
+//       message: ' Mã kích hoạt không hợp lệ hoặc đã hết hạn.'
 //     });
 //   }
 
 //   return res.status(200).json({
 //     success: true,
-//     message: '✅ Kích hoạt tài khoản thành công! Giờ bạn có thể đăng nhập.'
+//     message: ' Kích hoạt tài khoản thành công! Giờ bạn có thể đăng nhập.'
 //   });
 // }
 
@@ -381,7 +381,7 @@ async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
       : [],
   });
 
-  // ✅ Thiết lập cookie option chuẩn cho môi trường deploy
+  //  Thiết lập cookie option chuẩn cho môi trường deploy
   const cookieConfig = {
     httpOnly: true,
     secure: true,        // bắt buộc trên HTTPS (Render)
@@ -389,13 +389,13 @@ async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     path: '/',
   };
 
-  // ✅ Set cookie Access token (15 phút)
+  //  Set cookie Access token (15 phút)
   res.cookie(ACCESS_TOKEN_COOKIE, access_token, {
     ...cookieConfig,
     maxAge: 1000 * 60 * 15,
   });
 
-  // ✅ Set cookie Refresh token (7 ngày)
+  //  Set cookie Refresh token (7 ngày)
   res.cookie(REFRESH_TOKEN_COOKIE, refresh_token, {
     ...cookieConfig,
     maxAge: 1000 * 60 * 60 * 24 * 7,
@@ -540,13 +540,13 @@ async activate(@Param('code') code: string, @Res() res: Response) {
   if (!user) {
     return res.status(400).json({
       success: false,
-      message: '❌ Mã kích hoạt không hợp lệ hoặc đã hết hạn.'
+      message: ' Mã kích hoạt không hợp lệ hoặc đã hết hạn.'
     });
   }
 
   return res.status(200).json({
     success: true,
-    message: '✅ Kích hoạt tài khoản thành công! Giờ bạn có thể đăng nhập.'
+    message: ' Kích hoạt tài khoản thành công! Giờ bạn có thể đăng nhập.'
   });
 }
 
