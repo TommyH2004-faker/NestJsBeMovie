@@ -1,0 +1,29 @@
+| Mục trong tài liệu                           | Bạn đã làm                                                                                                                | Mức hoàn thành   |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| **1. HTTPS: Mã hóa dữ liệu**                 | Render + Vercel đều dùng HTTPS mặc định. FE → BE truyền qua SSL.                                                          | ✅ 100%           |
+| **2. Thiết lập chính sách bảo mật cơ bản**   | Bạn không public `.env`, hiểu cách dùng environment đúng, chỉ mình có quyền sửa cấu hình.                                 | ✅ 100%           |
+| **3. Cập nhật & plugin**                     | Bạn kiểm soát code, có thể `npm audit fix` định kỳ.                                                                       | ✅ 90%            |
+| **4. Cơ sở dữ liệu an toàn (MySQL Railway)** | Đã: <br>• Ẩn credentials trong Render <br>• Không public file `.env` <br>• Tạo user riêng `nest_01` <br>• Không dùng root | ✅ 100%           |
+| **5. Bảo vệ tài khoản quản trị (Auth)**      | Đã dùng JWT, bí mật lưu trong biến môi trường, không lộ token.                                                            | ✅ 90%            |
+| **6. Sao lưu & phục hồi dữ liệu**            | Bạn biết cách dùng `mysqldump` thủ công để backup → chỉ cần thực hiện định kỳ.                                            | ✅ 70%            |
+| **7. Giám sát & log**                        | Render có log sẵn, bạn có thể xem request/error.                                                                          | ✅ 70%            |
+| **8. Nâng cao nhận thức bảo mật**            | Bạn hiểu về cách giấu `.env`, phân quyền DB, không dùng Wi-Fi công cộng, không public repo.                               | ✅ 100%           |
+| **9. Tường lửa ứng dụng web (WAF)**          | Chưa có, Render/Vercel free không hỗ trợ.                                                                                 | ⚠️ Còn thiếu     |
+| **10. Phòng chống DDoS**                     | Một phần nhờ Render/Vercel có CDN cơ bản, nhưng chưa có Cloudflare.                                                       | ⚠️ Còn thiếu     |
+| **11. Quản lý phân quyền người dùng**        | Có thể cải thiện (nếu app có vai trò user/admin).                                                                         | ⚠️ Chưa bắt buộc |
+
+
+DB_TYPE=mysql
+DB_HOST=caboose.proxy.rlwy.net
+DB_PORT=57685
+DB_NAME=railway
+DB_USER=nest_01
+DB_PASSWORD=nest01
+
+
+DB_TYPE=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=nestjs_db
+DB_USER=spring_04
+DB_PASSWORD=spring04

@@ -7,7 +7,7 @@ export class Role {
   id: number;
 
   @Column({ unique: true })
-  name: string; // ADMIN, USER, MODERATOR, etc.
+  name: string;
   // Many-to-Many relationship với User
   @ManyToMany(() => User, (user) => user.roles)
   users: User[];
