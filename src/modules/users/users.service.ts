@@ -239,11 +239,17 @@ async findOneWithReviews(id: number) {
 
  // Nếu dùng TypeORM
 // Nếu dùng TypeORM
-async update(id: number, data: Partial<User>) {
-  await this.userRepository.update(id, data);
-  return this.userRepository.findOne({ where: { id } });
-}
+// async update(id: number, data: Partial<User>) {
+//   await this.userRepository.update(id, data);
+//   return this.userRepository.findOne({ where: { id } });
+// }
 
+async update(id: number, data: Partial<User>) {
+  const user = await this.userRepository.findOne({ where: { id } });
+  if (!user) return null;
+  Object.assign(user, data);
+  return await this.userRepository.save(user); // save trực tiếp, trả về user đã update
+}
 
 
 }
