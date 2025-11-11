@@ -422,6 +422,7 @@ async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const refreshToken = req.cookies?.[REFRESH_TOKEN_COOKIE];
     if (!refreshToken) throw new BadRequestException('Refresh token missing');
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const user = await this.authService.verifyRefreshToken(refreshToken);
     if (!user) throw new BadRequestException('Invalid refresh token');
 
