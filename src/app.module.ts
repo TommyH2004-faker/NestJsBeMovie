@@ -27,6 +27,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { CloudinaryModule } from './modules/Cloundinary/cloudinary.module';
 import { join } from 'path/win32';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { send } from 'process';
 
 @Module({
   imports: [
@@ -96,6 +97,7 @@ export class AppModule {
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       jwtSecret: process.env.JWT_SECRET,
+      sendgridApiKey: process.env.SENDGRID_API_KEY,
     });
     console.log('MAIL_USER:', process.env.MAIL_USER);
     console.log('MAIL_PASS:', process.env.MAIL_PASS ? ' loaded' : ' missing');
