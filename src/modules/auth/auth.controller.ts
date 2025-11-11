@@ -228,137 +228,6 @@ export class AuthController {
     private readonly usersService: UsersService,
   ) {}
 
-  /**
-   * Login bằng LocalAuthGuard (passport-local)
-   * Server trả cookies httpOnly, không trả token trong body (chỉ message)
-   */
-//   @UseGuards(LocalAuthGuard)
-//   @Post('login')
-//   async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-//     const user = req.user as any;
-
-//     const { access_token, refresh_token } = await this.authService.login({
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-//       id: user.id,
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-//       username: user.username,
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-//       email: user.email,
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-//       enabled: user.enabled,
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-//       roles: Array.isArray(user.roles)
-//         // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return
-//         ? user.roles.map((r: any) => (typeof r === 'string' ? r : r.name))
-//         : [],
-//     });
-
-//     // set cookies
-//     res.cookie(ACCESS_TOKEN_COOKIE, access_token, {
-//       ...cookieOptions(),
-//       maxAge: 1000 * 60 * 15, 
-//     });
-
-//     res.cookie(REFRESH_TOKEN_COOKIE, refresh_token, {
-//       ...cookieOptions(),
-//       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-//     });
-
-// return {
-//   message: 'Login success',
-//   access_token,
-//   refresh_token,
-// };
-
-//   }
-// @UseGuards(LocalAuthGuard)
-// @Post('login')
-// async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-//   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-//   const user = req.user as any;
-
-//   // Kiểm tra xem tài khoản có bị khóa không
-//   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-//   if (!user.enabled) {
-//     throw new UnauthorizedException('Tài khoản của bạn đã bị khóa, vui lòng liên hệ quản trị viên.');
-//   }
-
-//     // Tiến hành tạo token nếu tài khoản không bị khóa
-//   const { access_token, refresh_token } = await this.authService.login({
-//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-//     id: user.id,
-//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-//     username: user.name,  // Sửa từ username thành name
-//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-//     email: user.email,
-//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-//     enabled: user.enabled,
-//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-//     roles: Array.isArray(user.roles)
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return
-//       ? user.roles.map((r: any) => (typeof r === 'string' ? r : r.name))
-//       : [],
-//   });
-
-//   // Set cookies
-//   res.cookie(ACCESS_TOKEN_COOKIE, access_token, {
-//     ...cookieOptions(),
-//     maxAge: 1000 * 60 * 15, 
-//   });
-
-//   res.cookie(REFRESH_TOKEN_COOKIE, refresh_token, {
-//     ...cookieOptions(),
-//     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-//   });
-
-//   return {
-//     message: 'Login success',
-//     access_token,
-//     refresh_token,
-//   };
-// }
-// @UseGuards(LocalAuthGuard)
-// @Post('login')
-// async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-//   // user đã được validate ở LocalStrategy (đã qua kiểm tra enabled + password)
-//   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-//   const user = req.user as any;
-
-//   // Nếu tới được đây, nghĩa là user hợp lệ
-//   const { access_token, refresh_token } = await this.authService.login({
-//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-//     id: user.id,
-//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-//     username: user.name,  // hoặc user.username nếu bạn đặt vậy trong entity
-//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-//     email: user.email,
-//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-//     enabled: user.enabled,
-//     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-//     roles: Array.isArray(user.roles)
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return
-//       ? user.roles.map((r: any) => (typeof r === 'string' ? r : r.name))
-//       : [],
-//   });
-
-//   // Set cookies
-//   res.cookie(ACCESS_TOKEN_COOKIE, access_token, {
-//     ...cookieOptions(),
-//     maxAge: 1000 * 60 * 15, // 15 phút
-//   });
-
-//   res.cookie(REFRESH_TOKEN_COOKIE, refresh_token, {
-//     ...cookieOptions(),
-//     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 ngày
-//   });
-
-//   return {
-//     message: 'Login success',
-//     access_token,
-//     refresh_token,
-//   };
-// }
 @UseGuards(LocalAuthGuard)
 @Post('login')
 async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
@@ -455,27 +324,7 @@ async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     };
   }
 
-  /**
-   * Profile: JwtAuthGuard phải đọc token từ cookie (tương ứng JwtStrategy cần lấy token từ cookie)
-   */
-  // @UseGuards(JwtAuthGuard)
-  // @Get('profile')
-  // getProfile(@Req() req: Request) {
-  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  //   const u = req.user as any;
-  //   return {
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-  //     id: u?.id,
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-  //     username: u?.username,
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-  //     email: u?.email,
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-  //     roles: u?.roles ?? (u?.role ? [u.role] : []),
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-  //     enabled: u?.enabled,
-  //   };
-  // }
+ 
 @UseGuards(JwtAuthGuard)
 @Get('profile')
 getProfile(@Req() req: Request) {
@@ -501,7 +350,7 @@ getProfile(@Req() req: Request) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
      return this.usersService.create(userData);
    }
-   //   @Get('search/existsByEmail')
+     @Get('search/existsByEmail')
    async existsByEmails(@Query('email') email: string): Promise<string> {
 
      const exists = await this.usersService.existsByEmail(email);
