@@ -68,7 +68,7 @@ export class UsersService {
     const savedUser = await this.userRepository.save(user);
 
     // Tạo link kích hoạt
-    const activationLink = `http://localhost:8080/kich-hoat/${savedUser.activationCode}`;
+    const activationLink = `${process.env.FRONTEND_URL}/kich-hoat/${savedUser.activationCode}`;
 
     // Gửi mail
     await this.mailerService.sendActivationEmail(savedUser.email, activationLink);
