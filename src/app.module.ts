@@ -27,7 +27,6 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { CloudinaryModule } from './modules/Cloundinary/cloudinary.module';
 import { join } from 'path/win32';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { send } from 'process';
 
 @Module({
   imports: [
