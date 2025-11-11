@@ -65,7 +65,10 @@ export class FavoritesController {
   @Post('add')
   async add(@Req() req, @Body('movieId') movieId: number): Promise<Favorite> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    const userId = req.user.id; // Lấy userId từ JWT
+    const userId = req.user.id;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    console.log("👤 user payload trong JWT:", req.user);
+ // Lấy userId từ JWT
     if (!movieId) {
       throw new BadRequestException('movieId is required.');
     }
